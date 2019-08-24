@@ -1,0 +1,192 @@
+###################################################################
+#  Static positioning and control loop addresses                  #
+###################################################################
+record(stringin, "$(P)$(R)CH$(ADDR):FW_RBV")
+{
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),0)LC400_FW")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+record(ao,"$(P)$(R)CH$(ADDR):SP") {
+    field(DESC, "Setpoint in cts")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_DIGITAL_POS")
+}
+
+record(ai,"$(P)$(R)CH$(ADDR):SP_RBV") {
+    field(DESC, "Position in cts")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_DIGITAL_POS")
+    field(SCAN,"I/O Intr")
+}
+
+record(ao,"$(P)$(R)CH$(ADDR):PG") {
+    field(DESC, "Proportional Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_P_GAIN")
+}
+
+record(ai,"$(P)$(R)CH$(ADDR):PG_RBV") {
+    field(DESC, "Proportional Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_P_GAIN")
+    field(SCAN,"I/O Intr")
+}
+
+record(ao,"$(P)$(R)CH$(ADDR):IG") {
+    field(DESC, "Integral Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_I_GAIN")
+}
+
+record(ai,"$(P)$(R)CH$(ADDR):IG_RBV") {
+    field(DESC, "Integral Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_I_GAIN")
+    field(SCAN,"I/O Intr")
+}
+
+record(ao,"$(P)$(R)CH$(ADDR):DG") {
+    field(DESC, "Derivative Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_D_GAIN")
+}
+
+record(ai,"$(P)$(R)CH$(ADDR):DG_RBV") {
+    field(DESC, "Derivative Gain")
+    field(PREC,"3")
+    field(DTYP, "asynFloat64")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_D_GAIN")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):CL") {
+    field(DESC,"Closed Loop State")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_SERVO_STATE")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):CL_RBV") {
+    field(DESC,"Closed Loop State")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_SERVO_STATE")
+    field(SCAN,"I/O Intr")
+}
+
+###################################################################
+#  wavetable addresses                                            #
+###################################################################
+record(longout,"$(P)$(R)CH$(ADDR):WAV_EN") {
+    field(DESC,"Wavetable Enable")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_ENABLE")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_EN_RBV") {
+    field(DESC,"Wavetable Enable")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_ENABLE")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_IDX") {
+    field(DESC,"Wavetable Index")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_INDEX")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_IDX_RBV") {
+    field(DESC,"Wavetable Index")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_INDEX")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_DLY") {
+    field(DESC,"Wavetable Delay")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_DELAY")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_DLY_RBV") {
+    field(DESC,"Wavetable Delay")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_DELAY")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_EIDX") {
+    field(DESC,"Wavetable End of Index")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_ENDIDX")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_EIDX_RBV") {
+    field(DESC,"Wavetable End of Index")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_ENDIDX")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_ACT") {
+    field(DESC,"Wavetable Active")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_ACTIVE")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_ACT_RBV") {
+    field(DESC,"Wavetable Active")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_ACTIVE")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_ITER") {
+    field(DESC,"Wavetable Iterations")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_ITER")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_ITER_RBV") {
+    field(DESC,"Wavetable Iterations")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_ITER")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_ITER_CTS") {
+    field(DESC,"Wavetable Iteration Cts")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_ITERCTS")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_ITER_CTS_RBV") {
+    field(DESC,"Wavetable Iterations Cts")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_ITERCTS")
+    field(SCAN,"I/O Intr")
+}
+
+record(longout,"$(P)$(R)CH$(ADDR):WAV_MAX_PTS") {
+    field(DESC,"Wavetable Iteration Cts")
+    field(VAL, 20000)
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,"@asyn($(PORT),$(ADDR))LC400_W_MAXPTS")
+}
+
+record(longin,"$(P)$(R)CH$(ADDR):WAV_MAX_PTS_RBV") {
+    field(DESC,"Wavetable Iterations Cts")
+    field(DTYP, "asynInt32")
+    field(INP,"@asyn($(PORT),$(ADDR))LC400_W_MAXPTS")
+    field(SCAN,"I/O Intr")
+}

@@ -23,8 +23,13 @@ nPoint_DBD += base.dbd
 nPoint_DBD += asyn.dbd
 nPoint_DBD += drvAsynSerialPort.dbd
 #endif
+#ifdef FTDI
+nPoint_DBD += drvAsynFTDIPort.dbd
+#endif
+
 nPoint_DBD += motorSupport.dbd
 nPoint_DBD += NPointMotorSupport.dbd
+nPoint_DBD += LC400MotorSupport.dbd
 
 # Add all the support libraries needed by this IOC
 nPoint_LIBS += NPointMotor

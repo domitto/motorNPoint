@@ -14,7 +14,8 @@ cd "${TOP}/iocBoot/${IOC}"
 dbLoadRecords("$(MOTOR)/db/motorUtil.db", "P=nPoint:")
 
 ##
-< C300.cmd
+< LC400.cmd
+#< C300.cmd
 
 iocInit
 

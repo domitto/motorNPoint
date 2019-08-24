@@ -13,9 +13,11 @@ LIBRARY_IOC += NPointMotor
 # motorRecord.h will be created from motorRecord.dbd
 # install devMotorSoft.dbd into <top>/dbd
 DBD += NPointMotorSupport.dbd
+DBD += LC400MotorSupport.dbd
 
 # The following are compiled and added to the Support library
 NPointMotor_SRCS += C300MotorDriver.cpp
+NPointMotor_SRCS += LC400MotorDriver.cpp
 
 NPointMotor_LIBS += motor
 NPointMotor_LIBS += asyn
