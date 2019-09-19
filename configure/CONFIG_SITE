@@ -35,6 +35,12 @@ CHECK_RELEASE = YES
 #HOST_OPT = NO
 #CROSS_OPT = NO
 
+# If you have libusb-1.0 and libftdi, and want FTDI support, set DRV_FTDI=YES
+DRV_FTDI=YES
+
+# If your system has libftdi1, set the following to YES. If it has libftdi, set it to NO
+DRV_FTDI_USE_LIBFTDI1=NO
+
 # These allow developers to override the CONFIG_SITE variable
 # settings without having to modify the configure/CONFIG_SITE
 # file itself.

@@ -10,6 +10,21 @@ include $(TOP)/configure/CONFIG
 
 LIBRARY_IOC += NPointMotor
 
+ifeq ($(DRV_FTDI),YES)
+  SRC_DIRS += drvAsynFTDI
+  NPointMotor_SRCS += ftdiDriver.cpp drvAsynFTDIPort.cpp
+  NPointMotor_SYS_LIBS += usb-1.0
+  INC += drvAsynFTDIPort.h
+  ifeq ($(DRV_FTDI_USE_LIBFTDI1),YES)
+    NPointMotor_SYS_LIBS += ftdi1
+    USR_CXXFLAGS += -DHAVE_LIBFTDI1
+  else
+    NPointMotor_SYS_LIBS += ftdi
+  endif
+  DBD += drvAsynFTDIPort.dbd
+endif
+
+
 # motorRecord.h will be created from motorRecord.dbd
 # install devMotorSoft.dbd into <top>/dbd
 DBD += NPointMotorSupport.dbd
