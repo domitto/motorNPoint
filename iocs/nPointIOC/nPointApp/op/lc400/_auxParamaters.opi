@@ -142,7 +142,7 @@ $(pv_value)</tooltip>
     <foreground_color>
       <color red="0" green="0" blue="0" />
     </foreground_color>
-    <height>10</height>
+    <height>14</height>
     <horizontal_alignment>1</horizontal_alignment>
     <name>Label_1</name>
     <rules />
@@ -158,7 +158,7 @@ $(pv_value)</tooltip>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>64</width>
+    <width>98</width>
     <wrap_words>false</wrap_words>
     <wuid>12ffdb7a:16d49d8c7dd:-7f51</wuid>
     <x>165</x>
@@ -183,7 +183,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <height>480</height>
-    <lock_children>true</lock_children>
+    <lock_children>false</lock_children>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <ADDR>0</ADDR>
@@ -224,7 +224,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <height>277</height>
-      <lock_children>true</lock_children>
+      <lock_children>false</lock_children>
       <macros>
         <include_parent_macros>true</include_parent_macros>
       </macros>
@@ -1264,7 +1264,7 @@ $(pv_value)</tooltip>
         <name>Text Input_10</name>
         <precision>0</precision>
         <precision_from_pv>true</precision_from_pv>
-        <pv_name>$(P)$(R)CH$(ADDR):ITER_CTS</pv_name>
+        <pv_name>$(P)$(R)CH$(ADDR):WAV_ITER_CTS</pv_name>
         <pv_value />
         <rotation_angle>0.0</rotation_angle>
         <rules />
@@ -2074,56 +2074,6 @@ $(pv_value)</tooltip>
         <x>87</x>
         <y>89</y>
       </widget>
-      <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-        <actions hook="false" hook_all="false" />
-        <alarm_pulsing>false</alarm_pulsing>
-        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-        <background_color>
-          <color red="240" green="240" blue="240" />
-        </background_color>
-        <border_alarm_sensitive>true</border_alarm_sensitive>
-        <border_color>
-          <color red="0" green="128" blue="255" />
-        </border_color>
-        <border_style>0</border_style>
-        <border_width>1</border_width>
-        <enabled>true</enabled>
-        <font>
-          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
-        </font>
-        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-        <foreground_color>
-          <color red="0" green="0" blue="0" />
-        </foreground_color>
-        <height>25</height>
-        <horizontal>true</horizontal>
-        <items>
-          <s>Closed Loop</s>
-          <s>Open Loop</s>
-        </items>
-        <items_from_pv>false</items_from_pv>
-        <name>Choice Button</name>
-        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
-        <pv_value />
-        <rules />
-        <scale_options>
-          <width_scalable>true</width_scalable>
-          <height_scalable>true</height_scalable>
-          <keep_wh_ratio>false</keep_wh_ratio>
-        </scale_options>
-        <scripts />
-        <selected_color>
-          <color red="255" green="255" blue="255" />
-        </selected_color>
-        <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-        <visible>true</visible>
-        <widget_type>Choice Button</widget_type>
-        <width>172</width>
-        <wuid>12ffdb7a:16d49d8c7dd:-7eec</wuid>
-        <x>35</x>
-        <y>0</y>
-      </widget>
       <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
         <actions hook="false" hook_all="false" />
         <alarm_pulsing>false</alarm_pulsing>
@@ -2170,11 +2120,73 @@ $(pv_value)</tooltip>
         <vertical_alignment>1</vertical_alignment>
         <visible>true</visible>
         <widget_type>Text Update</widget_type>
-        <width>87</width>
+        <width>101</width>
         <wrap_words>false</wrap_words>
         <wuid>12ffdb7a:16d49d8c7dd:-7ee6</wuid>
-        <x>212</x>
+        <x>198</x>
         <y>3</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <bit>-1</bit>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <confirm_message>Are you sure you want to do this?</confirm_message>
+        <data_type>0</data_type>
+        <effect_3d>true</effect_3d>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <height>25</height>
+        <labels_from_pv>false</labels_from_pv>
+        <name>Boolean Button</name>
+        <off_color>
+          <color red="0" green="100" blue="0" />
+        </off_color>
+        <off_label>Open Loop</off_label>
+        <on_color>
+          <color red="0" green="255" blue="0" />
+        </on_color>
+        <on_label>Closed Loop</on_label>
+        <password></password>
+        <push_action_index>0</push_action_index>
+        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
+        <pv_value />
+        <released_action_index>0</released_action_index>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_boolean_label>true</show_boolean_label>
+        <show_confirm_dialog>0</show_confirm_dialog>
+        <show_led>true</show_led>
+        <square_button>true</square_button>
+        <toggle_button>true</toggle_button>
+        <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+        <visible>true</visible>
+        <widget_type>Boolean Button</widget_type>
+        <width>145</width>
+        <wuid>2bdafdd3:16d792d5ab6:-7c12</wuid>
+        <x>42</x>
+        <y>0</y>
       </widget>
     </widget>
   </widget>
@@ -2197,7 +2209,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <height>480</height>
-    <lock_children>true</lock_children>
+    <lock_children>false</lock_children>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <ADDR>1</ADDR>
@@ -2238,7 +2250,7 @@ $(pv_value)</tooltip>
         <color red="192" green="192" blue="192" />
       </foreground_color>
       <height>277</height>
-      <lock_children>true</lock_children>
+      <lock_children>false</lock_children>
       <macros>
         <include_parent_macros>true</include_parent_macros>
       </macros>
@@ -3278,7 +3290,7 @@ $(pv_value)</tooltip>
         <name>Text Input_10</name>
         <precision>0</precision>
         <precision_from_pv>true</precision_from_pv>
-        <pv_name>$(P)$(R)CH$(ADDR):ITER_CTS</pv_name>
+        <pv_name>$(P)$(R)CH$(ADDR):WAV_ITER_CTS</pv_name>
         <pv_value />
         <rotation_angle>0.0</rotation_angle>
         <rules />
@@ -4088,56 +4100,6 @@ $(pv_value)</tooltip>
         <x>87</x>
         <y>89</y>
       </widget>
-      <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-        <actions hook="false" hook_all="false" />
-        <alarm_pulsing>false</alarm_pulsing>
-        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-        <background_color>
-          <color red="240" green="240" blue="240" />
-        </background_color>
-        <border_alarm_sensitive>true</border_alarm_sensitive>
-        <border_color>
-          <color red="0" green="128" blue="255" />
-        </border_color>
-        <border_style>0</border_style>
-        <border_width>1</border_width>
-        <enabled>true</enabled>
-        <font>
-          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
-        </font>
-        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-        <foreground_color>
-          <color red="0" green="0" blue="0" />
-        </foreground_color>
-        <height>25</height>
-        <horizontal>true</horizontal>
-        <items>
-          <s>Closed Loop</s>
-          <s>Open Loop</s>
-        </items>
-        <items_from_pv>false</items_from_pv>
-        <name>Choice Button</name>
-        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
-        <pv_value />
-        <rules />
-        <scale_options>
-          <width_scalable>true</width_scalable>
-          <height_scalable>true</height_scalable>
-          <keep_wh_ratio>false</keep_wh_ratio>
-        </scale_options>
-        <scripts />
-        <selected_color>
-          <color red="255" green="255" blue="255" />
-        </selected_color>
-        <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-        <visible>true</visible>
-        <widget_type>Choice Button</widget_type>
-        <width>172</width>
-        <wuid>4a275509:16d4b97e883:-7f2a</wuid>
-        <x>35</x>
-        <y>0</y>
-      </widget>
       <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
         <actions hook="false" hook_all="false" />
         <alarm_pulsing>false</alarm_pulsing>
@@ -4184,11 +4146,73 @@ $(pv_value)</tooltip>
         <vertical_alignment>1</vertical_alignment>
         <visible>true</visible>
         <widget_type>Text Update</widget_type>
-        <width>87</width>
+        <width>101</width>
         <wrap_words>false</wrap_words>
-        <wuid>4a275509:16d4b97e883:-7f29</wuid>
-        <x>212</x>
+        <wuid>2bdafdd3:16d792d5ab6:-7538</wuid>
+        <x>198</x>
         <y>3</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <bit>-1</bit>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <confirm_message>Are you sure you want to do this?</confirm_message>
+        <data_type>0</data_type>
+        <effect_3d>true</effect_3d>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <height>25</height>
+        <labels_from_pv>false</labels_from_pv>
+        <name>Boolean Button</name>
+        <off_color>
+          <color red="0" green="100" blue="0" />
+        </off_color>
+        <off_label>Open Loop</off_label>
+        <on_color>
+          <color red="0" green="255" blue="0" />
+        </on_color>
+        <on_label>Closed Loop</on_label>
+        <password></password>
+        <push_action_index>0</push_action_index>
+        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
+        <pv_value />
+        <released_action_index>0</released_action_index>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_boolean_label>true</show_boolean_label>
+        <show_confirm_dialog>0</show_confirm_dialog>
+        <show_led>true</show_led>
+        <square_button>true</square_button>
+        <toggle_button>true</toggle_button>
+        <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+        <visible>true</visible>
+        <widget_type>Boolean Button</widget_type>
+        <width>145</width>
+        <wuid>2bdafdd3:16d792d5ab6:-7537</wuid>
+        <x>42</x>
+        <y>0</y>
       </widget>
     </widget>
   </widget>
@@ -4211,7 +4235,7 @@ $(pv_value)</tooltip>
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <height>480</height>
-    <lock_children>true</lock_children>
+    <lock_children>false</lock_children>
     <macros>
       <include_parent_macros>true</include_parent_macros>
       <ADDR>2</ADDR>
@@ -5292,7 +5316,7 @@ $(pv_value)</tooltip>
         <name>Text Input_10</name>
         <precision>0</precision>
         <precision_from_pv>true</precision_from_pv>
-        <pv_name>$(P)$(R)CH$(ADDR):ITER_CTS</pv_name>
+        <pv_name>$(P)$(R)CH$(ADDR):WAV_ITER_CTS</pv_name>
         <pv_value />
         <rotation_angle>0.0</rotation_angle>
         <rules />
@@ -6102,56 +6126,6 @@ $(pv_value)</tooltip>
         <x>87</x>
         <y>89</y>
       </widget>
-      <widget typeId="org.csstudio.opibuilder.widgets.choiceButton" version="1.0.0">
-        <actions hook="false" hook_all="false" />
-        <alarm_pulsing>false</alarm_pulsing>
-        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-        <background_color>
-          <color red="240" green="240" blue="240" />
-        </background_color>
-        <border_alarm_sensitive>true</border_alarm_sensitive>
-        <border_color>
-          <color red="0" green="128" blue="255" />
-        </border_color>
-        <border_style>0</border_style>
-        <border_width>1</border_width>
-        <enabled>true</enabled>
-        <font>
-          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
-        </font>
-        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
-        <foreground_color>
-          <color red="0" green="0" blue="0" />
-        </foreground_color>
-        <height>25</height>
-        <horizontal>true</horizontal>
-        <items>
-          <s>Closed Loop</s>
-          <s>Open Loop</s>
-        </items>
-        <items_from_pv>false</items_from_pv>
-        <name>Choice Button</name>
-        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
-        <pv_value />
-        <rules />
-        <scale_options>
-          <width_scalable>true</width_scalable>
-          <height_scalable>true</height_scalable>
-          <keep_wh_ratio>false</keep_wh_ratio>
-        </scale_options>
-        <scripts />
-        <selected_color>
-          <color red="255" green="255" blue="255" />
-        </selected_color>
-        <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-        <visible>true</visible>
-        <widget_type>Choice Button</widget_type>
-        <width>172</width>
-        <wuid>4a275509:16d4b97e883:-7ead</wuid>
-        <x>35</x>
-        <y>0</y>
-      </widget>
       <widget typeId="org.csstudio.opibuilder.widgets.TextUpdate" version="1.0.0">
         <actions hook="false" hook_all="false" />
         <alarm_pulsing>false</alarm_pulsing>
@@ -6198,11 +6172,73 @@ $(pv_value)</tooltip>
         <vertical_alignment>1</vertical_alignment>
         <visible>true</visible>
         <widget_type>Text Update</widget_type>
-        <width>87</width>
+        <width>101</width>
         <wrap_words>false</wrap_words>
-        <wuid>4a275509:16d4b97e883:-7eac</wuid>
-        <x>212</x>
+        <wuid>2bdafdd3:16d792d5ab6:-7530</wuid>
+        <x>198</x>
         <y>3</y>
+      </widget>
+      <widget typeId="org.csstudio.opibuilder.widgets.BoolButton" version="1.0.0">
+        <actions hook="false" hook_all="false" />
+        <alarm_pulsing>false</alarm_pulsing>
+        <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+        <background_color>
+          <color red="240" green="240" blue="240" />
+        </background_color>
+        <bit>-1</bit>
+        <border_alarm_sensitive>true</border_alarm_sensitive>
+        <border_color>
+          <color red="0" green="128" blue="255" />
+        </border_color>
+        <border_style>0</border_style>
+        <border_width>1</border_width>
+        <confirm_message>Are you sure you want to do this?</confirm_message>
+        <data_type>0</data_type>
+        <effect_3d>true</effect_3d>
+        <enabled>true</enabled>
+        <font>
+          <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Default</opifont.name>
+        </font>
+        <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
+        <foreground_color>
+          <color red="0" green="0" blue="0" />
+        </foreground_color>
+        <height>25</height>
+        <labels_from_pv>false</labels_from_pv>
+        <name>Boolean Button</name>
+        <off_color>
+          <color red="0" green="100" blue="0" />
+        </off_color>
+        <off_label>Open Loop</off_label>
+        <on_color>
+          <color red="0" green="255" blue="0" />
+        </on_color>
+        <on_label>Closed Loop</on_label>
+        <password></password>
+        <push_action_index>0</push_action_index>
+        <pv_name>$(P)$(R)CH$(ADDR):CL</pv_name>
+        <pv_value />
+        <released_action_index>0</released_action_index>
+        <rules />
+        <scale_options>
+          <width_scalable>true</width_scalable>
+          <height_scalable>true</height_scalable>
+          <keep_wh_ratio>true</keep_wh_ratio>
+        </scale_options>
+        <scripts />
+        <show_boolean_label>true</show_boolean_label>
+        <show_confirm_dialog>0</show_confirm_dialog>
+        <show_led>true</show_led>
+        <square_button>true</square_button>
+        <toggle_button>true</toggle_button>
+        <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+        <visible>true</visible>
+        <widget_type>Boolean Button</widget_type>
+        <width>145</width>
+        <wuid>2bdafdd3:16d792d5ab6:-752f</wuid>
+        <x>42</x>
+        <y>0</y>
       </widget>
     </widget>
   </widget>
