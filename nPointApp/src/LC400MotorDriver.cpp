@@ -556,13 +556,13 @@ asynStatus LC400Controller::writeFloat64(asynUser *pasynUser, epicsFloat64 value
   asynStatus status = asynSuccess;
   LC400Axis *pAxis = getAxis(pasynUser);
   static const char *functionName = "writeFloat64";
-  union floatToInt{
+  union doubleToInt{
     epicsInt32 vInt[2];
-    float_t vFloat;
+    epicsFloat64 vDouble;
   };
-
-  union floatToInt v;
-  v.vFloat = value;
+  union doubleToInt v;
+  
+  v.vDouble = value;
   epicsUInt32 address = getBaseAddress(pAxis->axisNo_);
   if (address)
   {
@@ -573,17 +573,17 @@ asynStatus LC400Controller::writeFloat64(asynUser *pasynUser, epicsFloat64 value
     else if (function == LC400_P_Gain_)
     {
       if ((status = writeSingle(address+P_GAIN,v.vInt[0])) ) goto skip;
-      status = writeSingle(address+P_GAIN,v.vInt[1]);
+      status = writeSingle(address+P_GAIN+sizeof(epicsInt32),v.vInt[1]);
     }
     else if (function == LC400_I_Gain_)
     {
       if ((status = writeSingle(address+I_GAIN,v.vInt[0])) ) goto skip;
-      status = writeSingle(address+I_GAIN,v.vInt[1]);
+      status = writeSingle(address+I_GAIN+sizeof(epicsInt32),v.vInt[1]);
     }
     else if (function == LC400_D_Gain_)
     {
       if ((status = writeSingle(address+D_GAIN,v.vInt[0])) ) goto skip;
-      status = writeSingle(address+D_GAIN,v.vInt[1]);
+      status = writeSingle(address+D_GAIN+sizeof(epicsInt32),v.vInt[1]);
     }
     else
       /* Call base class method */
