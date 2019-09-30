@@ -657,6 +657,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
   if (wavAddr)
   {
+    movement->dataProc[0]=initialPos;
     if ((status = pC_->writeArray(wavAddr,movement->dataProc,(size_t)movement->data_len*sizeof(epicsInt32))) )
     {
       free(movement);
@@ -718,6 +719,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     
     //start movement
     status = pC_->writeSingle(chAddr+WAV_ACTIVE,1);
+    status = pC_->writeSingle(wavAddr,position);
   }
   else
     status = asynError;
