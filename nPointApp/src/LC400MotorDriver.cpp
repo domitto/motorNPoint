@@ -657,7 +657,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
   if (wavAddr)
   {
-    movement->dataProc[0]=initialPos;
+    //movement->dataProc[0]=initialPos;
     if ((status = pC_->writeArray(wavAddr,movement->dataProc,(size_t)movement->data_len*sizeof(epicsInt32))) )
     {
       free(movement);
@@ -693,8 +693,8 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if (chAddr)
   {
     if ((status = pC_->writeSingle(chAddr+WAV_ACTIVE,0)) ) goto skip;
-    if ((status = pC_->writeSingle(chAddr+WAV_ENABLE,2)) ) goto skip;
     if ((status = pC_->writeSingle(chAddr+WAV_INDEX,1)) ) goto skip;
+    if ((status = pC_->writeSingle(chAddr+WAV_ENABLE,2)) ) goto skip;
     if ((status = pC_->writeSingle(chAddr+WAV_DELAY,(epicsInt32)movement->cycle_count)) ) goto skip;
     if ((status = pC_->writeSingle(chAddr+WAV_END,((epicsInt32)movement->data_len-1))) ) goto skip;
     if ((status = pC_->writeSingle(chAddr+WAV_ITERATIONS,1)) ) goto skip;
@@ -719,7 +719,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     
     //start movement
     status = pC_->writeSingle(chAddr+WAV_ACTIVE,1);
-    status = pC_->writeSingle(wavAddr,position);
+    //status = pC_->writeSingle(wavAddr,position);
   }
   else
     status = asynError;
