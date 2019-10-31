@@ -659,7 +659,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
   if (wavAddr)
   {
-    //movement->dataProc[0]=initialPos;
+    movement->dataProc[0]=initialPos;
     ss.str("");
     ss<<"npoint-axis"<<axisNo_<<"-waveform.log";
     FILE *wav = fopen(ss.str().c_str(),"wb");
@@ -746,7 +746,18 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     status = pC_->writeSingle(chAddr+WAV_ACTIVE,1);
     fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ACTIVE,1);
     fclose(log);
-    //status = pC_->writeSingle(wavAddr,position);
+
+    epicsInt32 currentPos; 
+    if(status = pC_->readSingle(address+ST_DIGITAL_POS, &currentPos) ) goto skip;
+    epicsInt32 timeout = 0;
+    while(currentPos <= movement->dataProc[1] || timeout < 20) //2 seconds timeout
+    {
+      if (status = pC_->readSingle(address+ST_DIGITAL_POS, &currentPos) ) goto skip;
+      epicsThreadSleep(0.100);
+      ++timeout;
+    }
+    status = pC_->writeSingle(wavAddr,position);
+
   }
   else
     status = asynError;
