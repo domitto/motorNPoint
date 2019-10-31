@@ -15,6 +15,7 @@ August, 2019
 #include <assert.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <sstream>
 
 #include <iocsh.h>
 #include <epicsThread.h>
@@ -642,6 +643,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   asynStatus status=asynSuccess;
   epicsFloat64 initialPos;
   epicsUInt32 chAddr;
+  std::stringstream ss;
   
   pC_->getDoubleParam(axisNo_,pC_->LC400_Digital_Pos_,&initialPos);
   if(relative)
@@ -658,6 +660,12 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if (wavAddr)
   {
     //movement->dataProc[0]=initialPos;
+    ss.str("");
+    ss<<"npoint-axis"<<axisNo_<<"-waveform.log";
+    FILE *wav = fopen(ss.str().c_str(),"wb");
+    for (int i = 0; i < movement->data_len; ++i)
+      fprintf(wav,"%d\n",movement->dataProc[i]);
+    fclose(wav);
     if ((status = pC_->writeArray(wavAddr,movement->dataProc,(size_t)movement->data_len*sizeof(epicsInt32))) )
     {
       free(movement);
@@ -692,16 +700,33 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   chAddr = getBaseAddress(axisNo_);
   if (chAddr)
   {
+    ss.str("");
+    ss<<"npoint-axis"<<axisNo_<<".log";
+    FILE *log = fopen(ss.str().c_str(),"wb");
     if ((status = pC_->writeSingle(chAddr+WAV_ACTIVE,0)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ACTIVE,0);
+
     if ((status = pC_->writeSingle(chAddr+WAV_INDEX,1)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_INDEX,1);
+
     if ((status = pC_->writeSingle(chAddr+WAV_ENABLE,2)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ENABLE,2);
+
     if ((status = pC_->writeSingle(chAddr+WAV_DELAY,(epicsInt32)movement->cycle_count)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_DELAY,(epicsInt32)movement->cycle_count);
+
     if ((status = pC_->writeSingle(chAddr+WAV_END,((epicsInt32)movement->data_len-1))) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_END,((epicsInt32)movement->data_len-1));
+
     if ((status = pC_->writeSingle(chAddr+WAV_ITERATIONS,1)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ITERATIONS,1);
+
     if ((status = pC_->writeSingle(chAddr+WAV_COUNT,1)) ) goto skip;
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_COUNT,1);
 
     //readback wavetable parameters and update PVs
     epicsInt32 val;
+    
     if ((status = pC_->readSingle(chAddr+WAV_ACTIVE, &val)) ) goto skip;
     setIntegerParam(pC_->LC400_W_Active_, val);
     if ((status = pC_->readSingle(chAddr+WAV_ACTIVE, &val)) ) goto skip;
@@ -719,6 +744,8 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     
     //start movement
     status = pC_->writeSingle(chAddr+WAV_ACTIVE,1);
+    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ACTIVE,1);
+    fclose(log);
     //status = pC_->writeSingle(wavAddr,position);
   }
   else
