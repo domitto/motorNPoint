@@ -644,10 +644,13 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   epicsFloat64 initialPos;
   epicsUInt32 chAddr;
   std::stringstream ss;
+  bool positive_move;
   
   pC_->getDoubleParam(axisNo_,pC_->LC400_Digital_Pos_,&initialPos);
   if(relative)
     position=initialPos+position;
+
+  positive_move = position > initialPos;
 
   //generate trapezoidal movement from command and maxPts from PV
   epicsInt32 maxpts;
@@ -748,12 +751,17 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     fclose(log);
 
     epicsInt32 currentPos; 
-    if(status = pC_->readSingle(address+ST_DIGITAL_POS, &currentPos) ) goto skip;
+    if(status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos) ) goto skip;
     epicsInt32 timeout = 0;
-    while(currentPos <= movement->dataProc[1] || timeout < 20) //2 seconds timeout
+    printf("positive_move = %d\n", positive_move);
+    
+    while(((positive_move && currentPos <= movement->dataProc[5]) 
+                || (!positive_move && currentPos >= movement->dataProc[5])) 
+                && timeout < 20) //2 seconds timeout
     {
-      if (status = pC_->readSingle(address+ST_DIGITAL_POS, &currentPos) ) goto skip;
-      epicsThreadSleep(0.100);
+      printf("currentPos = %d\n", currentPos);
+      printf("movement->dataProc[1] = %d\n", movement->dataProc[1]);
+      if (status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos) ) goto skip;      epicsThreadSleep(0.100);
       ++timeout;
     }
     status = pC_->writeSingle(wavAddr,position);
