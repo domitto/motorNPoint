@@ -755,15 +755,23 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     epicsInt32 timeout = 0;
     printf("positive_move = %d\n", positive_move);
     
+    //time to complete the movement in seconds
+    epicsInt32 tMovement = movement->data_len * movement->cycle_count * LC400_MIN_DELAY;
+
+    /*
     while(((positive_move && currentPos <= movement->dataProc[5]) 
                 || (!positive_move && currentPos >= movement->dataProc[5])) 
                 && timeout < 20) //2 seconds timeout
     {
       printf("currentPos = %d\n", currentPos);
       printf("movement->dataProc[1] = %d\n", movement->dataProc[1]);
-      if (status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos) ) goto skip;      epicsThreadSleep(0.100);
+      if (status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos) ) goto skip;      
+      epicsThreadSleep(0.100);
       ++timeout;
     }
+    */
+    //sleep for 10% of the movement time
+    epicsThreadSleep(tMovement * 0.1);
     status = pC_->writeSingle(wavAddr,position);
 
   }
