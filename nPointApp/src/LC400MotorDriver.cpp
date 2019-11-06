@@ -664,7 +664,10 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   {
     movement->dataProc[0]=initialPos;
     ss.str("");
-    ss<<"npoint-axis"<<axisNo_<<"-waveform.log";
+    if (positive_move)
+      ss<<"npoint-axis"<<axisNo_<<"-pos-waveform.log";
+    else
+      ss<<"npoint-axis"<<axisNo_<<"-neg-waveform.log";
     FILE *wav = fopen(ss.str().c_str(),"wb");
     for (int i = 0; i < movement->data_len; ++i)
       fprintf(wav,"%d\n",movement->dataProc[i]);
