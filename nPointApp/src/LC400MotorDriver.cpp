@@ -652,8 +652,6 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   epicsInt32 currentPos;
   epicsFloat64 initialPos;
   epicsUInt32 chAddr;
-  std::stringstream ss;
-  bool positive_move;
   
   chAddr = getBaseAddress(axisNo_);
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
@@ -667,8 +665,6 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if(relative)
     position=initialPos+position;
 
-  positive_move = position > initialPos;
-
   //generate trapezoidal movement from command and maxPts from PV
   epicsInt32 maxpts;
   pC_->getIntegerParam(axisNo_,pC_->LC400_W_MaxPts_, &maxpts);
@@ -679,15 +675,6 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if (wavAddr)
   {
     movement->dataProc[0]=initialPos;
-    ss.str("");
-    if (positive_move)
-      ss<<"npoint-axis"<<axisNo_<<"-pos-waveform.log";
-    else
-      ss<<"npoint-axis"<<axisNo_<<"-neg-waveform.log";
-    FILE *wav = fopen(ss.str().c_str(),"wb");
-    for (int i = 0; i < movement->data_len; ++i)
-      fprintf(wav,"%d\n",movement->dataProc[i]);
-    fclose(wav);
     if ((status = pC_->writeArray(wavAddr,movement->dataProc,(size_t)movement->data_len*sizeof(epicsInt32))) )
     {
       free(movement);
@@ -722,29 +709,12 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   chAddr = getBaseAddress(axisNo_);
   if (chAddr)
   {
-    ss.str("");
-    ss<<"npoint-axis"<<axisNo_<<".log";
-    FILE *log = fopen(ss.str().c_str(),"wb");
     if ((status = pC_->writeSingle(chAddr+WAV_ACTIVE,0)) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ACTIVE,0);
-
     if ((status = pC_->writeSingle(chAddr+WAV_ENABLE,2)) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ENABLE,2);
-
     if ((status = pC_->writeSingle(chAddr+WAV_DELAY,(epicsInt32)movement->cycle_count)) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_DELAY,(epicsInt32)movement->cycle_count);
-
     if ((status = pC_->writeSingle(chAddr+WAV_END,((epicsInt32)movement->data_len-1))) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_END,((epicsInt32)movement->data_len-1));
-
     if ((status = pC_->writeSingle(chAddr+WAV_ITERATIONS,1)) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ITERATIONS,1);
-
     if ((status = pC_->writeSingle(chAddr+WAV_COUNT,1)) ) goto skip;
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_COUNT,1);
-
-    //if ((status = pC_->writeSingle(chAddr+WAV_INDEX,0)) ) goto skip;
-    //fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_INDEX,0);
 
     //readback wavetable parameters and update PVs
     epicsInt32 val;
@@ -766,37 +736,13 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
     
     //start movement
     status = pC_->writeSingle(chAddr+WAV_ACTIVE,1);
-    fprintf(log,"write, addr: %8X, val: %8X\n",chAddr+WAV_ACTIVE,1);
-    fclose(log);
 
-    //epicsInt32 currentPos; 
-    //if(status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos) ) goto skip;
-    epicsInt32 timeout = 0;
-    printf("positive_move = %d\n", positive_move);
-    
-    //time to complete the movement in seconds
-    epicsInt32 tMovement = movement->data_len * movement->cycle_count * LC400_MIN_DELAY;
-    tMovement = tMovement*0.1;
-    /*
-    if(tMovement > 1)
+    epicsInt32 index = 0;
+    while (index == 0)
     {
-      for (float i=0; i < tMovement; i=i+0.1)
-      {
-        //update position
-        if ((status = pC_->readSingle(chAddr+ST_DIGITAL_POS, &currentPos)) ) goto skip;
-        setDoubleParam(pC_->LC400_Digital_Pos_,currentPos);
-        setDoubleParam(pC_->motorPosition_, currentPos);
-        setIntegerParam(pC_->motorStatusDone_, 0);
-        callParamCallbacks();
-        epicsThreadSleep(0.1);
-        printf("updating position, i = %f\n",i);
-      }
+      status = pC_->readSingle(chAddr+WAV_INDEX,&index);
+      epicsThreadSleep(0.01);
     }
-    else
-      //sleep for 10% of the movement time
-      epicsThreadSleep(tMovement);
-    */
-    epicsThreadSleep(tMovement);
     status = pC_->writeSingle(wavAddr,position);
   }
   else
