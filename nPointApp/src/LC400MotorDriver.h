@@ -50,12 +50,15 @@ public:
   asynStatus moveVelocity(epicsFloat64 min_velocity, epicsFloat64 max_velocity, epicsFloat64 acceleration);
   asynStatus poll(bool *moving);
   asynStatus stop(epicsFloat64 acceleration);
+  void setHardLimit(epicsFloat64 posHardLimit, epicsFloat64 negHardLimit);
 
 
 private:
   LC400Controller *pC_;      /**< Pointer to the asynMotorController to which this axis belongs.
                                 *   Abbreviated because it is used very frequently */
   epicsInt32 range;
+  epicsFloat64 posHardLim;
+  epicsFloat64 negHardLim; 
 
 friend class LC400Controller;
 };

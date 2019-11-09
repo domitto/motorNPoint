@@ -25,3 +25,5 @@ dbLoadTemplate("LC400.substitutions")
 #      idle poll period (ms))
 LC400CreateController("LC400", "LC400ftdi", 3, 100, 1000)
 #LC400CreateController("LC400", "serial1", 3, 100, 1000)
+
+LC400ConfigAxis("LC400", 0, 10, -10)

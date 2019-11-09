@@ -831,6 +831,11 @@ asynStatus LC400Axis::poll(bool *moving)
   return status;
 }
 
+extern "C" int LC400ConfigAxis(const char *portName, int axis, epicsFloat64 hiHardLimit, epicsFloat64 lowHardLimit)
+{
+  printf("LC400Config axis function..\n");
+}
+
 /** Code for iocsh registration */
 static const iocshArg LC400CreateControllerArg0 = {"Port name", iocshArgString};
 static const iocshArg LC400CreateControllerArg1 = {"LC400 port name", iocshArgString};
@@ -848,9 +853,29 @@ static void LC400CreateContollerCallFunc(const iocshArgBuf *args)
   LC400CreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival, args[4].ival);
 }
 
+static const iocshArg LC400ConfigAxisArg0 = { "Post name",     iocshArgString};
+static const iocshArg LC400ConfigAxisArg1 = { "Axis #",        iocshArgInt};
+static const iocshArg LC400ConfigAxisArg2 = { "High limit",    iocshArgDouble};
+static const iocshArg LC400ConfigAxisArg3 = { "Low limit",     iocshArgDouble};
+
+
+static const iocshArg *const LC400ConfigAxisArgs[] = {
+  &LC400ConfigAxisArg0,
+  &LC400ConfigAxisArg1,
+  &LC400ConfigAxisArg2,
+  &LC400ConfigAxisArg3,
+};
+static const iocshFuncDef LC400ConfigAxisDef ={"LC400ConfigAxis",4,LC400ConfigAxisArgs};
+
+static void LC400ConfigAxisCallFunc(const iocshArgBuf *args)
+{
+  LC400ConfigAxis(args[0].sval, args[1].ival, args[2].dval, args[3].dval);
+}
+
 static void LC400MotorRegister(void)
 {
   iocshRegister(&LC400CreateControllerDef, LC400CreateContollerCallFunc);
+  iocshRegister(&LC400ConfigAxisDef, LC400ConfigAxisCallFunc);
 }
 
 extern "C" {
