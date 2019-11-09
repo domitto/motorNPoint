@@ -831,6 +831,11 @@ asynStatus LC400Axis::poll(bool *moving)
   return status;
 }
 
+void LC400Axis::setHardLimit(epicsFloat64 posHardLimit, epicsFloat64 negHardLimit);
+{
+  printf("setting axis hard limit..\n");
+}
+
 extern "C" int LC400ConfigAxis(const char *portName, int axis, epicsFloat64 hiHardLimit, epicsFloat64 lowHardLimit)
 {
   printf("LC400Config axis function..\n");
