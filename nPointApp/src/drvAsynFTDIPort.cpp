@@ -235,7 +235,7 @@ static const struct asynOption asynOptionMethods = { setOption, getOption };
  */
 static void
 closeConnection(asynUser *pasynUser,ftdiController_t *ftdi,const char *why)
-{
+{/*
     asynPrint(pasynUser, ASYN_TRACE_FLOW,
               "Close %d:%d connection (driver %p): %s\n", ftdi->FTDIvendor, ftdi->FTDIproduct, ftdi->driver, why);
     if (ftdi->driver){
@@ -243,6 +243,7 @@ closeConnection(asynUser *pasynUser,ftdiController_t *ftdi,const char *why)
         delete(ftdi->driver);
         ftdi->driver = 0;
     }
+    */
 }
 
 /*Beginning of asynCommon methods*/

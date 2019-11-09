@@ -26,4 +26,14 @@ dbLoadTemplate("LC400.substitutions")
 LC400CreateController("LC400", "LC400ftdi", 3, 100, 1000)
 #LC400CreateController("LC400", "serial1", 3, 100, 1000)
 
-LC400ConfigAxis("LC400", 0, 10, -10)
+#optional functions
+#LC400ConfigAxis(
+#       port name,
+#       axis number,
+#       positive hard limit
+#       negative hard limit
+#       tolerance for hard limits in %
+#)
+LC400ConfigAxis("LC400ftdi", 0, 55, -55, 3)
+LC400ConfigAxis("LC400ftdi", 1, 55, -55, 3)
+LC400ConfigAxis("LC400ftdi", 2, 55, -55, 3)
