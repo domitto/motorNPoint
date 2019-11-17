@@ -23,3 +23,6 @@ iocInit
 motorUtilInit("nPoint:")
 
 # Boot complete
+dbpf nPoint:LC400:M1.NTM 0
+dbpf nPoint:LC400:M2.NTM 0
+dbpf nPoint:LC400:M3.NTM 0

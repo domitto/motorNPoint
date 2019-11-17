@@ -229,9 +229,9 @@ static void genTrapezoid(epicsFloat64 ipos, epicsFloat64 fpos, epicsFloat64 vel,
     // Convert to cycles
     size_t cycle_count = (size_t) ceil(t_tot / LC400_MIN_DELAY / maxpts);
     epicsFloat64 t_per_cycle = cycle_count*LC400_MIN_DELAY;
-    size_t npts = (size_t) ceil(t_tot / t_per_cycle);
+    size_t npts = (size_t) floor(t_tot / t_per_cycle);
 
-    assert(npts <= maxpts);
+    npts = std::min(npts, maxpts);
 
     // Fill the waveform
     epicsFloat64 dir = fpos > ipos ? 1.0 : -1.0;
