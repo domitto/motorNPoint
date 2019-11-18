@@ -668,9 +668,9 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if(relative)
     position=initialPos+position;
   
-  if(position > posHardLimit && posHardLimit != 0)
+  if(position*(1+tolHardLimit) > posHardLimit && posHardLimit != 0)
     position = posHardLimit;
-  else if(position < negHardLimit && negHardLimit != 0)
+  else if(position*(1+tolHardLimit) < negHardLimit && negHardLimit != 0)
     position = negHardLimit;
 
   //generate trapezoidal movement from command and maxPts from PV
