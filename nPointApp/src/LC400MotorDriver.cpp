@@ -668,9 +668,9 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if(relative)
     position=initialPos+position;
   
-  if(position*(1+tolHardLimit) > posHardLimit && posHardLimit != 0)
+  if(posHardLimit != 0 && position*(1+tolHardLimit) > posHardLimit)
     position = posHardLimit;
-  else if(position*(1+tolHardLimit) < negHardLimit && negHardLimit != 0)
+  else if(negHardLimit != 0 && position*(1-tolHardLimit) < negHardLimit)
     position = negHardLimit;
 
   //generate trapezoidal movement from command and maxPts from PV
@@ -766,18 +766,20 @@ asynStatus LC400Axis::moveVelocity(epicsFloat64 min_velocity, epicsFloat64 max_v
 {
   asynStatus status;
   epicsInt32 range;
+  epicsInt32 position;
+
   if ((status = pC_->getIntegerParam(axisNo_,pC_->LC400_Range_,&range)) ) goto skip;
-  range = range/2;
+  position = range/2;
   if(posHardLimit)
-    range = getPosition(posHardLimit);
+    position = getPosition(posHardLimit);
 
   if (max_velocity < 0) {
     max_velocity = -max_velocity;
-    range = -range;
+    position = -position;
     if(negHardLimit)
-      range = getPosition(negHardLimit);
+      position = getPosition(negHardLimit);
   }
-  status = move(getCts((epicsFloat64)range),0,0,max_velocity,acceleration);
+  status = move(getCts((epicsFloat64)position),0,0,max_velocity,acceleration);
 
   skip:
   return status;
@@ -834,7 +836,7 @@ asynStatus LC400Axis::poll(bool *moving)
   }
   if(negHardLimit != 0)
   {
-    if(currentPos*(1+tolHardLimit) <= negHardLimit)
+    if(currentPos*(1-tolHardLimit) <= negHardLimit)
       setIntegerParam(pC_->motorStatusLowLimit_,1);
     else
       setIntegerParam(pC_->motorStatusLowLimit_,0);
