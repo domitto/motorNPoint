@@ -632,6 +632,7 @@ LC400Axis::LC400Axis(LC400Controller *pC, epicsInt32 axisNo)
 
 asynStatus LC400Axis::stop(epicsFloat64 acceleration)
 {
+  printf("LC400Axis::stop\n");
   asynStatus status;
   epicsUInt32 chAddr = getBaseAddress(axisNo_);
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
@@ -652,6 +653,7 @@ asynStatus LC400Axis::stop(epicsFloat64 acceleration)
 
 asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloat64 minVelocity, epicsFloat64 maxVelocity, epicsFloat64 acceleration)
 {
+  printf("LC400Axis::move position=%f, relative=%d, minVelocity=%f, maxVelocity=%f, acceleration=%f\n",getPosition(position),relative,minVelocity,maxVelocity,acceleration);
   asynStatus status=asynSuccess;
   epicsInt32 currentPos;
   epicsFloat64 initialPos;
@@ -668,11 +670,16 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   if(relative)
     position=initialPos+position;
   
-  if(posHardLimit != 0 && position*(1+tolHardLimit) > posHardLimit)
-    position = posHardLimit;
-  else if(negHardLimit != 0 && position*(1-tolHardLimit) < negHardLimit)
-    position = negHardLimit;
-
+  if(posHardLimit != 0 && position > posHardLimit)
+  {
+    printf("position %f  > posHardLimit %f, command ignored\n",getPosition(position),getPosition(posHardLimit));
+    return status;
+  }
+  else if(negHardLimit != 0 && position < negHardLimit)
+  {
+    printf("position %f < negHardLimit %f, command ignored\n",getPosition(position),getPosition(negHardLimit));
+    return status;
+  }
   //generate trapezoidal movement from command and maxPts from PV
   epicsInt32 maxpts;
   pC_->getIntegerParam(axisNo_,pC_->LC400_W_MaxPts_, &maxpts);
@@ -764,23 +771,51 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
 
 asynStatus LC400Axis::moveVelocity(epicsFloat64 min_velocity, epicsFloat64 max_velocity, epicsFloat64 acceleration)
 {
+  printf("LC400Axis::moveVelocity\n");
   asynStatus status;
   epicsInt32 range;
   epicsInt32 position;
+  epicsInt32 highLimit;
+  epicsInt32 lowLimit;
 
-  if ((status = pC_->getIntegerParam(axisNo_,pC_->LC400_Range_,&range)) ) goto skip;
-  position = range/2;
-  if(posHardLimit)
-    position = getPosition(posHardLimit);
-
-  if (max_velocity < 0) {
-    max_velocity = -max_velocity;
-    position = -position;
-    if(negHardLimit)
-      position = getPosition(negHardLimit);
+  //get limit status
+  if (status = pC_->getIntegerParam(pC_->motorStatusHighLimit_,&highLimit))  goto skip;
+  if (status = pC_->getIntegerParam(pC_->motorStatusLowLimit_,&lowLimit))  goto skip;
+  if (max_velocity > 0 && highLimit)
+  {
+    printf("already at high limit, ignoring command\n");
+    return status;
   }
-  status = move(getCts((epicsFloat64)position),0,0,max_velocity,acceleration);
-
+  else if(max_velocity < 0 && lowLimit)
+  {
+    printf("already at low limit, ignoring command\n");
+    return status;
+  }
+  else
+  {
+    if(max_velocity < 0)
+    {
+      max_velocity = -max_velocity;
+      if(negHardLimit)
+        position = getPosition(negHardLimit);
+      else
+      {
+        if ((status = pC_->getIntegerParam(axisNo_,pC_->LC400_Range_,&range)) ) goto skip;
+        position = -(range/2);
+      }
+    }
+    else
+    {
+      if(posHardLimit)
+        position = getPosition(posHardLimit);
+      else
+      {
+        if ((status = pC_->getIntegerParam(axisNo_,pC_->LC400_Range_,&range)) ) goto skip;
+        position = range/2;
+      }
+    }
+    status = move(getCts((epicsFloat64)position),0,0,max_velocity,acceleration);
+  }
   skip:
   return status;
 }
@@ -829,14 +864,14 @@ asynStatus LC400Axis::poll(bool *moving)
   // Read the limit status
   if(posHardLimit != 0)
   {
-    if(currentPos*(1+tolHardLimit) >= posHardLimit)
+    if(currentPos+tolHardLimit >= posHardLimit)
       setIntegerParam(pC_->motorStatusHighLimit_,1);
     else
       setIntegerParam(pC_->motorStatusHighLimit_,0);
   }
   if(negHardLimit != 0)
   {
-    if(currentPos*(1-tolHardLimit) <= negHardLimit)
+    if(currentPos-tolHardLimit <= negHardLimit)
       setIntegerParam(pC_->motorStatusLowLimit_,1);
     else
       setIntegerParam(pC_->motorStatusLowLimit_,0);
@@ -853,7 +888,7 @@ void LC400Axis::setHardLimits(epicsFloat64 posHardLimit, epicsFloat64 negHardLim
 {
   this->posHardLimit=getCts(posHardLimit);
   this->negHardLimit=getCts(negHardLimit);
-  this->tolHardLimit=tolHardLimit/100;
+  this->tolHardLimit=getCts(tolHardLimit);
 }
 
 extern "C" int LC400ConfigAxis(const char *portName, int axis, epicsFloat64 hiHardLimit, epicsFloat64 lowHardLimit, epicsFloat64 tolHardLimit)
