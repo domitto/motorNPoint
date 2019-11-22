@@ -672,13 +672,13 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   
   if(posHardLimit != 0 && position > posHardLimit)
   {
-    printf("position %f  > posHardLimit %f, command ignored\n",getPosition(position),getPosition(posHardLimit));
-    return status;
+    printf("position %f  > posHardLimit %f, moving to pos limit\n",getPosition(position),getPosition(posHardLimit));
+    position = posHardLimit;
   }
   else if(negHardLimit != 0 && position < negHardLimit)
   {
-    printf("position %f < negHardLimit %f, command ignored\n",getPosition(position),getPosition(negHardLimit));
-    return status;
+    printf("position %f < negHardLimit %f, moving to neg limit\n",getPosition(position),getPosition(negHardLimit));
+    position = negHardLimit;
   }
   //generate trapezoidal movement from command and maxPts from PV
   epicsInt32 maxpts;
@@ -850,9 +850,27 @@ asynStatus LC400Axis::poll(bool *moving)
     {
       done = 1;
       if ((status = pC_->updateAuxParams(axisNo_)) ) goto skip;
+      // Read the limit status
+      if(posHardLimit != 0)
+      {
+        if(currentPos+tolHardLimit >= posHardLimit)
+          setIntegerParam(pC_->motorStatusHighLimit_,1);
+      }
+      if(negHardLimit != 0)
+      {
+        if(currentPos-tolHardLimit <= negHardLimit)
+          setIntegerParam(pC_->motorStatusLowLimit_,1);
+      }
     }
     else
+    {
       done = 0;
+      if(currentPos+tolHardLimit < posHardLimit)
+        setIntegerParam(pC_->motorStatusHighLimit_,0);
+      if(currentPos-tolHardLimit > negHardLimit)
+        setIntegerParam(pC_->motorStatusLowLimit_,0);
+    }
+
     setIntegerParam(pC_->motorStatusDone_, done);
     *moving = (!done);
   }
@@ -861,21 +879,7 @@ asynStatus LC400Axis::poll(bool *moving)
     status = asynError;
     goto skip;
   }
-  // Read the limit status
-  if(posHardLimit != 0)
-  {
-    if(currentPos+tolHardLimit >= posHardLimit)
-      setIntegerParam(pC_->motorStatusHighLimit_,1);
-    else
-      setIntegerParam(pC_->motorStatusHighLimit_,0);
-  }
-  if(negHardLimit != 0)
-  {
-    if(currentPos-tolHardLimit <= negHardLimit)
-      setIntegerParam(pC_->motorStatusLowLimit_,1);
-    else
-      setIntegerParam(pC_->motorStatusLowLimit_,0);
-  }
+ 
   skip:
   //set motorStatusProblem
   setIntegerParam(pC_->motorStatusProblem_, !!status);
