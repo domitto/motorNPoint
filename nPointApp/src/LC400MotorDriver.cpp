@@ -657,6 +657,7 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   asynStatus status=asynSuccess;
   epicsInt32 currentPos;
   epicsFloat64 initialPos;
+  epicsInt32 posLimit, negLimit;
   epicsUInt32 chAddr;
   chAddr = getBaseAddress(axisNo_);
   epicsUInt32 wavAddr = getWavetableAddress(axisNo_);
@@ -669,6 +670,14 @@ asynStatus LC400Axis::move(epicsFloat64 position, epicsInt32 relative, epicsFloa
   pC_->getDoubleParam(axisNo_,pC_->LC400_Digital_Pos_,&initialPos);
   if(relative)
     position=initialPos+position;
+
+  pC_->getIntegerParam(axisNo_,pC_->motorStatusHighLimit_,&posLimit);
+  pC_->getIntegerParam(axisNo_,pC_->motorStatusLowLimit_,&negLimit);
+
+  if(position > initialPos && posLimit)
+    return status;
+  if(position < initialPos && negLimit)
+    return status;
   
   if(posHardLimit != 0 && position > posHardLimit)
   {
@@ -853,21 +862,21 @@ asynStatus LC400Axis::poll(bool *moving)
       // Read the limit status
       if(posHardLimit != 0)
       {
-        if(currentPos+tolHardLimit >= posHardLimit)
+        if(currentPos >= posHardLimit)
           setIntegerParam(pC_->motorStatusHighLimit_,1);
       }
       if(negHardLimit != 0)
       {
-        if(currentPos-tolHardLimit <= negHardLimit)
+        if(currentPos <= negHardLimit)
           setIntegerParam(pC_->motorStatusLowLimit_,1);
       }
     }
     else
     {
       done = 0;
-      if(currentPos+tolHardLimit < posHardLimit)
+      if(currentPos < posHardLimit-tolHardLimit)
         setIntegerParam(pC_->motorStatusHighLimit_,0);
-      if(currentPos-tolHardLimit > negHardLimit)
+      if(currentPos > negHardLimit+tolHardLimit)
         setIntegerParam(pC_->motorStatusLowLimit_,0);
     }
 
