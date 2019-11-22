@@ -34,6 +34,6 @@ LC400CreateController("LC400", "LC400ftdi", 3, 100, 1000)
 #       negative hard limit
 #       tolerance for hard limits in %
 #)
-LC400ConfigAxis("LC400ftdi", 0, 50, -50, 1)
-LC400ConfigAxis("LC400ftdi", 1, 50, -50, 1)
-LC400ConfigAxis("LC400ftdi", 2, 50, -50, 1)
+LC400ConfigAxis("LC400ftdi", 0, 50, -50, 0.1)
+LC400ConfigAxis("LC400ftdi", 1, 50, -50, 0.1)
+LC400ConfigAxis("LC400ftdi", 2, 50, -50, 0.1)
