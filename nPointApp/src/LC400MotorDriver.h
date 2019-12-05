@@ -57,9 +57,12 @@ private:
   LC400Controller *pC_;      /**< Pointer to the asynMotorController to which this axis belongs.
                                 *   Abbreviated because it is used very frequently */
   epicsInt32 range;
-  epicsFloat64 posHardLimit;
-  epicsFloat64 negHardLimit; 
-  epicsFloat64 tolHardLimit;
+  epicsInt32 posHardLimit;
+  epicsInt32 negHardLimit; 
+  epicsInt32 tolHardLimit;
+  epicsFloat64 getPosition(epicsInt32 cts);
+  epicsInt32   getCts(epicsFloat64 pos);
+
 
 friend class LC400Controller;
 };
