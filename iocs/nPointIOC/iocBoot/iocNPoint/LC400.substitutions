@@ -1,4 +1,4 @@
-#MRES should be set to 1048574 / axis range
+#MRES should be set to 1 / (1048574 / axis range) e.g. for 100um range MRES=0.000095368
 file "$(MOTOR)/db/asyn_motor.db"
 {
 pattern
