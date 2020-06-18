@@ -19,13 +19,13 @@ DBD += nPoint.dbd
 nPoint_DBD += base.dbd
 
 # Include dbd files from all support applications:
-#ifdef ASYN
+ifdef ASYN
 nPoint_DBD += asyn.dbd
 nPoint_DBD += drvAsynSerialPort.dbd
-#endif
-#ifdef FTDI
+endif
+ifdef FTDI
 nPoint_DBD += drvAsynFTDIPort.dbd
-#endif
+endif
 
 nPoint_DBD += motorSupport.dbd
 nPoint_DBD += NPointMotorSupport.dbd
@@ -34,12 +34,12 @@ nPoint_DBD += LC400MotorSupport.dbd
 # Add all the support libraries needed by this IOC
 nPoint_LIBS += NPointMotor
 nPoint_LIBS += motor
-#ifdef ASYN
+ifdef ASYN
 nPoint_LIBS += asyn
-#endif
-#ifdef SNCSEQ
+endif
+ifdef SNCSEQ
 nPoint_LIBS += seq pv
-#endif
+endif
 
 # nPoint_registerRecordDeviceDriver.cpp derives from nPoint.dbd
 nPoint_SRCS += nPoint_registerRecordDeviceDriver.cpp
